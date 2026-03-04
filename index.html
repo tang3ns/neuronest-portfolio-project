@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroNest — AI-ассистенты для дома и офиса</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #f8f3f0;
+        --accent: #014baa;
+        --accent-soft: #e0ecfb;
+        --text-main: #09111a;
+        --text-muted: #6b7280;
+        --stroke: rgba(1, 75, 170, 0.12);
+        --radius-xl: 32px;
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Outfit", system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+        background: radial-gradient(circle at top left, #ffffff 0, #f8f3f0 45%, #efe3da 100%);
+        color: var(--text-main);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .page {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .shell {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 24px 20px 64px;
+      }
+
+      .card {
+        background: rgba(248, 243, 240, 0.9);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-soft);
+        border: 1px solid var(--stroke);
+        padding: 24px 24px 32px;
+        backdrop-filter: blur(18px);
+      }
+
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid rgba(9, 17, 26, 0.04);
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+        border-radius: 14px;
+        background: radial-gradient(circle at 30% 20%, #ffffff, #7fb3ff 45%, #014baa 100%);
+        position: relative;
+        box-shadow: 0 12px 30px rgba(1, 75, 170, 0.5);
+        overflow: hidden;
+      }
+
+      .logo-mark::before,
+      .logo-mark::after {
+        content: "";
+        position: absolute;
+        inset: 22%;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 243, 240, 0.9);
+      }
+
+      .logo-mark::after {
+        inset: 35%;
+        border-color: rgba(248, 243, 240, 0.6);
+      }
+
+      .logo-text-primary {
+        font-weight: 600;
+        font-size: 20px;
+        letter-spacing: 0.02em;
+      }
+
+      .logo-text-secondary {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.2em;
+        color: var(--text-muted);
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        font-size: 14px;
+      }
+
+      nav a {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 6px 0;
+      }
+
+      nav a:hover {
+        color: var(--text-main);
+      }
+
+      .nav-pill {
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(1, 75, 170, 0.18);
+        background: rgba(1, 75, 170, 0.04);
+        color: var(--accent);
+        font-size: 12px;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 3fr) minmax(0, 2.7fr);
+        gap: 32px;
+        padding-top: 24px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(1, 75, 170, 0.06);
+        color: var(--accent);
+      }
+
+      .eyebrow-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: #4ade80;
+        box-shadow: 0 0 0 5px rgba(74, 222, 128, 0.2);
+      }
+
+      .hero-title {
+        margin: 16px 0 12px;
+        font-size: clamp(32px, 4vw, 40px);
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+      }
+
+      .hero-title span {
+        color: var(--accent);
+      }
+
+      .hero-subtitle {
+        font-size: 15px;
+        line-height: 1.6;
+        color: var(--text-muted);
+        max-width: 460px;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .btn-primary {
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 999px;
+        padding: 11px 20px;
+        background: radial-gradient(circle at 30% 0, #ffffff, #3f8cff 38%, #014baa 100%);
+        color: white;
+        font-size: 14px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 15px 35px rgba(1, 75, 170, 0.35);
+      }
+
+      .btn-primary span.dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
+      .btn-secondary {
+        border-radius: 999px;
+        padding: 10px 18px;
+        border: 1px dashed rgba(1, 75, 170, 0.3);
+        background: rgba(255, 255, 255, 0.7);
+        font-size: 13px;
+        color: var(--text-main);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+      }
+
+      .btn-secondary svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .hero-footnote {
+        margin-top: 18px;
+        font-size: 12px;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .hero-footnote strong {
+        color: var(--text-main);
+      }
+
+      .hero-footnote-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .badge-soft {
+        font-size: 11px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(1, 75, 170, 0.04);
+        color: var(--accent);
+      }
+
+      /* Right column: visual concept */
+      .hero-visual {
+        position: relative;
+      }
+
+      .visual-card {
+        background: #ffffff;
+        border-radius: var(--radius-lg);
+        padding: 18px;
+        border: 1px solid var(--stroke);
+        box-shadow: 0 12px 35px rgba(1, 75, 170, 0.16);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .visual-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+      }
+
+      .visual-header span {
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .visual-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 9px;
+        border-radius: 999px;
+        background: rgba(1, 75, 170, 0.06);
+        color: var(--accent);
+        font-size: 11px;
+      }
+
+      .visual-layout {
+        display: grid;
+        grid-template-columns: 1.05fr 1.3fr;
+        gap: 14px;
+      }
+
+      .visual-home {
+        background: radial-gradient(circle at 15% 0, #fefefe, #e0ecfb 45%, #014baa 100%);
+        border-radius: var(--radius-md);
+        padding: 10px;
+        color: white;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .home-devices {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-size: 11px;
+      }
+
+      .home-devices-row {
+        display: flex;
+        justify-content: space-between;
+        opacity: 0.92;
+      }
+
+      .home-map {
+        margin-top: 10px;
+        height: 70px;
+        border-radius: 999px;
+        border: 1px solid rgba(248, 243, 240, 0.5);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .home-dot {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: #22c55e;
+        box-shadow: 0 0 0 5px rgba(34, 197, 94, 0.45);
+      }
+
+      .home-dot.office {
+        top: 20%;
+        left: 18%;
+      }
+
+      .home-dot.living {
+        top: 55%;
+        left: 60%;
+      }
+
+      .visual-stream {
+        background: var(--bg);
+        border-radius: var(--radius-md);
+        padding: 10px;
+        border: 1px dashed rgba(1, 75, 170, 0.25);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .stream-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 11px;
+      }
+
+      .stream-label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--text-muted);
+      }
+
+      .stream-pill {
+        padding: 4px 8px;
+        border-radius: 999px;
+        background: rgba(1, 75, 170, 0.06);
+        color: var(--accent);
+      }
+
+      .stream-value {
+        font-weight: 500;
+        color: var(--text-main);
+      }
+
+      .stream-bar {
+        margin-top: 4px;
+        height: 5px;
+        border-radius: 999px;
+        background: rgba(148, 163, 184, 0.28);
+        overflow: hidden;
+      }
+
+      .stream-bar-fill {
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #22c55e, #facc15);
+        width: 76%;
+      }
+
+      .visual-floating {
+        position: absolute;
+        bottom: -6px;
+        right: 10px;
+        transform: translateY(50%);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .floating-card {
+        background: #ffffff;
+        border-radius: 999px;
+        padding: 6px 10px;
+        border: 1px solid var(--stroke);
+        font-size: 11px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+      }
+
+      .floating-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #22c55e;
+      }
+
+      .floating-tag {
+        border-radius: 999px;
+        padding: 2px 8px;
+        font-size: 10px;
+        background: rgba(1, 75, 170, 0.06);
+        color: var(--accent);
+      }
+
+      /* Bottom info section */
+      .section-bottom {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: 1.5fr 2fr;
+        gap: 18px;
+        font-size: 13px;
+      }
+
+      .section-bottom h3 {
+        margin: 0 0 6px;
+        font-size: 14px;
+      }
+
+      .section-bottom p {
+        margin: 0;
+        color: var(--text-muted);
+        line-height: 1.5;
+      }
+
+      .pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .pill {
+        padding: 4px 9px;
+        border-radius: 999px;
+        background: rgba(1, 75, 170, 0.04);
+        color: var(--accent);
+        font-size: 11px;
+      }
+
+      .note {
+        font-size: 11px;
+        color: var(--text-muted);
+        margin-top: 10px;
+      }
+
+      footer {
+        margin-top: 18px;
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      /* Responsive */
+      @media (max-width: 900px) {
+        .card {
+          border-radius: 24px;
+        }
+
+        .hero {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .hero-visual {
+          order: -1;
+        }
+      }
+
+      @media (max-width: 640px) {
+        header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        nav {
+          width: 100%;
+          justify-content: space-between;
+          font-size: 13px;
+        }
+
+        .hero-actions {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .section-bottom {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <main class="shell">
+        <div class="card">
+          <header>
+            <div class="logo">
+              <div class="logo-mark" aria-hidden="true"></div>
+              <div>
+                <div class="logo-text-primary">NeuroNest</div>
+                <div class="logo-text-secondary">AI environment design</div>
+              </div>
+            </div>
+            <nav>
+              <a href="#solutions">Решения</a>
+              <a href="#cases">Кейсы</a>
+              <span class="nav-pill">для домов и офисов</span>
+            </nav>
+          </header>
+
+          <section class="hero">
+            <div>
+              <div class="eyebrow">
+                <span class="eyebrow-dot"></span>
+                Ваш личный AI-координатор пространства
+              </div>
+              <h1 class="hero-title">
+                Встраиваем <span>AI-ассистентов</span><br />
+                в архитектуру дома и офиса
+              </h1>
+              <p class="hero-subtitle">
+                Проектируем сценарии, интерфейсы и голосовые диалоги, которые объединяют свет, климат,
+                безопасность и встречи в один спокойный, предсказуемый опыт.
+              </p>
+              <div class="hero-actions">
+                <button class="btn-primary">
+                  <span class="dot"></span>
+                  Забрифовать проект
+                </button>
+                <button class="btn-secondary">
+                  <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 8.00065L6.5 11.5007L13 4.50065"
+                      stroke="#014BAA"
+                      stroke-width="1.4"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  Посмотреть карту сценариев
+                </button>
+              </div>
+              <div class="hero-footnote">
+                <strong>Среднее время адаптации — 5 дней</strong>
+                <div class="hero-footnote-badges">
+                  <span class="badge-soft">дом / офис / гибрид</span>
+                  <span class="badge-soft">умный свет</span>
+                  <span class="badge-soft">персональные рутины</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="hero-visual" aria-hidden="true">
+              <div class="visual-card">
+                <div class="visual-header">
+                  <span>NeuroNest OS · Live</span>
+                  <div class="visual-chip">
+                    <span class="eyebrow-dot" style="box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.18)"></span>
+                    Дом &amp; офис синхронизированы
+                  </div>
+                </div>
+                <div class="visual-layout">
+                  <div class="visual-home">
+                    <div class="home-devices">
+                      <div class="home-devices-row">
+                        <span>Гостинная · Фокус</span>
+                        <span>23°C · тёплый свет</span>
+                      </div>
+                      <div class="home-devices-row">
+                        <span>Кабинет · Звонок</span>
+                        <span>шумоподавление · запись</span>
+                      </div>
+                      <div class="home-devices-row">
+                        <span>Офис · Команда</span>
+                        <span>синхронизировать повестку</span>
+                      </div>
+                    </div>
+                    <div class="home-map">
+                      <div class="home-dot office"></div>
+                      <div class="home-dot living"></div>
+                    </div>
+                  </div>
+                  <div class="visual-stream">
+                    <div class="stream-row">
+                      <div class="stream-label">
+                        <span class="stream-pill">Сценарий сейчас</span>
+                        «Утро без экрана»
+                      </div>
+                      <span class="stream-value">92% соблюдения</span>
+                    </div>
+                    <div class="stream-bar">
+                      <div class="stream-bar-fill"></div>
+                    </div>
+                    <div class="stream-row">
+                      <div class="stream-label">
+                        Свет · климат · звук
+                      </div>
+                      <span class="stream-value">автоподбор по контексту</span>
+                    </div>
+                    <div class="stream-row">
+                      <div class="stream-label">
+                        Календарь · звонки · гости
+                      </div>
+                      <span class="stream-value">1 интерфейс</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="visual-floating">
+                  <div class="floating-card">
+                    <span class="floating-dot"></span>
+                    Ассистент: «Через 8 мин. созвон, настроить кабинет?»
+                  </div>
+                  <div class="floating-card">
+                    <span class="floating-tag">Мягкий режим</span>
+                    свет на кухне приглушён, музыка +15%
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section-bottom" id="solutions">
+            <div>
+              <h3>Что делает NeuroNest</h3>
+              <p>
+                Мы проектируем не гаджеты, а опыт: как человек проходит день, какие точки контакта у него с
+                домом и офисом, какие диалоги он ведёт с ассистентом — и как всё это выглядит на экране,
+                панели, в голосе.
+              </p>
+              <div class="pill-row">
+                <span class="pill">картирование сценариев</span>
+                <span class="pill">UX голосовых диалогов</span>
+                <span class="pill">интерфейсы панелей и приложений</span>
+              </div>
+            </div>
+            <div id="cases">
+              <h3>Кейсы для портфолио</h3>
+              <p>
+                На этой странице вы можете показать 2–3 вымышленных проекта: квартира-контентмейкера,
+                гибридный офис, семейный дом. Для каждого — карту сценариев, ключевые экраны и логику работы
+                ассистента.
+              </p>
+              <p class="note">
+                Подсказка: ниже можно добавить отдельные блоки с «Карта дня», «Экран ассистента», «Сценарий гостевого
+                режима» и т.п. — чтобы раскрыть глубину дизайна.
+              </p>
+            </div>
+          </section>
+
+          <footer>
+            <span>Концепт-студия NeuroNest · вымышленный бренд для портфолио</span>
+            <span>Дизайн: ваше имя / 2026</span>
+          </footer>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
+
